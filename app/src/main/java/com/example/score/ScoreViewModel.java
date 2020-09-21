@@ -9,12 +9,20 @@ public class ScoreViewModel extends ViewModel {
     private MutableLiveData<Team> teamB;
     private String previous;
 
-    public ScoreViewModel() {
+    {
         teamA = new MutableLiveData<>();
         teamB = new MutableLiveData<>();
         teamA.setValue(new Team("a"));
         teamB.setValue(new Team("b"));
         careTaker = new CareTaker();
+    }
+
+    public MutableLiveData<Team> getTeamA() {
+        return teamA;
+    }
+
+    public MutableLiveData<Team> getTeamB() {
+        return teamB;
     }
 
     public void add(String name, Integer score) {
