@@ -4,24 +4,24 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 public class ScoreViewModel extends ViewModel {
-    private CareTaker careTaker;
+    private CareTaker careTaker = new CareTaker();
     private MutableLiveData<Team> teamA;
     private MutableLiveData<Team> teamB;
     private String previous;
 
-    {
-        teamA = new MutableLiveData<>();
-        teamB = new MutableLiveData<>();
-        teamA.setValue(new Team("a"));
-        teamB.setValue(new Team("b"));
-        careTaker = new CareTaker();
-    }
-
     public MutableLiveData<Team> getTeamA() {
+        if (teamA == null) {
+            teamA = new MutableLiveData<>();
+            teamA.setValue(new Team("a"));
+        }
         return teamA;
     }
 
     public MutableLiveData<Team> getTeamB() {
+        if (teamB == null) {
+            teamB = new MutableLiveData<>();
+            teamB.setValue(new Team("b"));
+        }
         return teamB;
     }
 
@@ -34,6 +34,7 @@ public class ScoreViewModel extends ViewModel {
     }
 
     public void undo() {
+        // FIXME: 有 bug
         if (!undo(teamA)) {
             undo(teamB);
         }
