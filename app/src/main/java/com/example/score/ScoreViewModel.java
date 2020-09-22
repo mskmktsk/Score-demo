@@ -34,24 +34,23 @@ public class ScoreViewModel extends ViewModel {
     }
 
     public void undo() {
-        // FIXME: 有 bug
         if (!undo(teamA)) {
             undo(teamB);
         }
     }
 
     public void reset() {
-        if (previous != null) {
+        if (!careTaker.isEmpty()) {
             reset(teamA);
             reset(teamB);
-            careTaker.reset();
+            careTaker.clear();
             previous = null;
         }
     }
 
     private void add(MutableLiveData<Team> liveData, Integer score) {
         Team team = liveData.getValue();
-        careTaker.add(team.saveInfoToMemento());
+        careTaker.push(team.saveInfoToMemento());
         team.setScore(team.getScore() + score);
         liveData.setValue(team);
         previous = team.getName();
@@ -60,9 +59,10 @@ public class ScoreViewModel extends ViewModel {
     private boolean undo(MutableLiveData<Team> liveData) {
         Team team = liveData.getValue();
         boolean bool = team.getName().equalsIgnoreCase(previous);
-        if (bool) {
-            team.getInfoFromMemento(careTaker.get());
+        if (bool && !careTaker.isEmpty()) {
+            team.getInfoFromMemento(careTaker.pop());
             liveData.setValue(team);
+            previous = careTaker.isEmpty() ? null : careTaker.peek();
         }
         return bool;
     }
